@@ -4,4 +4,4 @@ This repository contains the necessary script to be included by a task conformin
 
 To install,
 
-    bower intall pem-task
+    bower intall France-ioi/pem-task
