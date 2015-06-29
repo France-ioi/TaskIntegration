@@ -169,6 +169,7 @@ if ( ! isCrossDomain()) {
       */
       messageCallback: function(e) {
          var message = PmInterface.getMessage(e.data);
+         if (!message) return;
          if (taskDebug) {
             console.log('Task '+PmInterface.sSourceId+' Got: ');
             console.log(message);
