@@ -11,13 +11,13 @@ function isCrossDomain() {
    function isSameDomain() {
       var res = false;
       try{
-          parent.document;
-          res = true;
+          res = !! parent.document.TaskProxyManager;
       } catch(e){
+          res = false;
       }
       return res;
    }
-   return isInIframe && !isSameDomain();
+   return isInIframe() && !isSameDomain();
 }
 
 if ( ! isCrossDomain()) {
