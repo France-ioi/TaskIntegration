@@ -201,4 +201,12 @@ if (!isCrossDomain()) {
 
 window.platform = platform;
 
+$('document').ready(function() {
+   console.error(window.task);
+   // if task is ready, use it, otherwise wait for initWithTask call
+   if (!platform.ready && typeof window.task.load === 'function') {
+      platform.initWithTask(window.task);
+   }
+});
+
 }());
