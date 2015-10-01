@@ -19,6 +19,7 @@ function isCrossDomain() {
    }
    function isSameDomain() {
       var res = false;
+      function doNothing(document){}
       try{
           res = !! parent.document.TaskProxyManager;
       } catch(e){
@@ -80,6 +81,10 @@ if (!isCrossDomain()) {
       },
       openUrl: function(url, success, error) {
          return platform.parent_platform.openUrl(url, success, error);
+      },
+      initWithTask: function(task) {
+         platform.task = task;
+         window.task = task;
       }
    };
 
@@ -87,18 +92,20 @@ if (!isCrossDomain()) {
 
    // cross-domain version, depends on jschannel
 
-   function callAndTrigger(fun, triggerName) {
+   var callAndTrigger = function(fun, triggerName) {
       return function() {
          platform.trigger(triggerName, arguments);
          fun(arguments);
       };
-   }
-
+   };
    platform = {};
+   platform.ready = false;
    platform.initWithTask = function(task) {
       var channelId = getUrlParameterByName('channelId');
       var chan = Channel.build({window: window.parent, origin: "*", scope: channelId});
       platform.chan = chan;
+      platform.task = task;
+      window.task = task;
       platform.channelId = channelId;
       chan.bind('task.load', function(trans, views) {task.load(views, callAndTrigger(trans.complete, 'load'), trans.error);trans.delayReturn(true);});
       chan.bind('task.unload', function(trans) {task.unload(callAndTrigger(trans.complete, 'unload'), trans.error);trans.delayReturn(true);});
@@ -111,6 +118,7 @@ if (!isCrossDomain()) {
       chan.bind('task.getAnswer', function(trans) {task.getAnswer(trans.complete, trans.error);trans.delayReturn(true);});
       chan.bind('task.getState', function(trans) {task.getState(trans.complete, trans.error);trans.delayReturn(true);});
       chan.bind('task.reloadState', function(trans, state) {task.reloadState(state, callAndTrigger(trans.complete, 'reloadState'), trans.error);trans.delayReturn(true);});
+      platform.ready = true;
    };
 
    platform.registered_objects = {};
@@ -135,7 +143,7 @@ if (!isCrossDomain()) {
    };
    platform.validate = function (sMode, success, error) {
       if (!success) success = function(){}; // not mandatory, as most code doesn't use it
-      if (!error) error = function(errMsg) {console.error(errMsg)};
+      if (!error) error = function() {console.error(arguments)};
       platform.chan.call({method: "platform.validate",
          params: sMode,
          error: error,
@@ -144,7 +152,7 @@ if (!isCrossDomain()) {
    };
    platform.getTaskParams = function(key, defaultValue, success, error) {
       if (!success) success = function(){};
-      if (!error) error = function(errMsg) {console.error(errMsg)};
+      if (!error) error = function() {console.error(arguments)};
       platform.chan.call({method: "platform.getTaskParams",
          params: [key, defaultValue],
          error: error,
@@ -153,7 +161,7 @@ if (!isCrossDomain()) {
    };
    platform.showView = function(views, success, error) {
       if (!success) success = function(){};
-      if (!error) error = function(errMsg) {console.error(errMsg)};
+      if (!error) error = function() {console.error(arguments)};
       platform.chan.call({method: "platform.showView",
          params: views,
          error: error,
@@ -162,7 +170,7 @@ if (!isCrossDomain()) {
    };
    platform.askHint = function(platformToken, success, error) {
       if (!success) success = function(){};
-      if (!error) error = function(errMsg) {console.error(errMsg)};
+      if (!error) error = function() {console.error(arguments)};
       platform.chan.call({method: "platform.askHint",
          params: platformToken,
          error: error,
@@ -171,7 +179,7 @@ if (!isCrossDomain()) {
    };
    platform.updateHeight = function(height, success, error) {
       if (!success) success = function(){};
-      if (!error) error = function(errMsg) {console.error(errMsg)};
+      if (!error) error = function() {console.error(arguments)};
       platform.chan.call({method: "platform.updateHeight",
          params: height,
          error: error,
@@ -180,7 +188,7 @@ if (!isCrossDomain()) {
    };
    platform.openUrl = function(url, success, error) {
       if (!success) success = function(){};
-      if (!error) error = function(errMsg) {console.error(errMsg)};
+      if (!error) error = function() {console.error(arguments)};
       platform.chan.call({method: "platform.openUrl",
          params: url,
          error: error,
