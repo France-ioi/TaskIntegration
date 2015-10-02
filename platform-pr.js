@@ -102,6 +102,13 @@ if (!isCrossDomain()) {
    platform = {};
    platform.ready = false;
    platform.initWithTask = function(task) {
+      var gradeAnswer = function(params, success, error) {
+         if (typeof task.gradeAnswer === 'function') {
+            task.gradeAnswer(params[0], params[1], success, error);
+         } else {
+            window.grader.gradeTask(params[0], params[1], success, error);
+         }
+      };
       var channelId = getUrlParameterByName('channelId');
       var chan = Channel.build({window: window.parent, origin: "*", scope: channelId});
       platform.chan = chan;
@@ -118,6 +125,8 @@ if (!isCrossDomain()) {
       chan.bind('task.getAnswer', function(trans) {task.getAnswer(trans.complete, trans.error);trans.delayReturn(true);});
       chan.bind('task.getState', function(trans) {task.getState(trans.complete, trans.error);trans.delayReturn(true);});
       chan.bind('task.reloadState', function(trans, state) {task.reloadState(state, callAndTrigger(trans.complete, 'reloadState'), trans.error);trans.delayReturn(true);});
+      chan.bind('grader.gradeTask', function(trans, params) {gradeAnswer(params, trans.complete, trans.error);trans.delayReturn(true);});
+      chan.bind('task.gradeAnswer', function(trans, params) {gradeAnswer(params, trans.complete, trans.error);trans.delayReturn(true);});
       platform.ready = true;
    };
 
