@@ -1,5 +1,5 @@
-import $ from 'jquery';
-import platform from './platform-pr.js';
+var $ = require('jquery');
+var platform = require('./platform-pr.js');
 
 /*
  * Implementation of a small platform for standalone tasks, mostly for
