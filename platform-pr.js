@@ -1,3 +1,6 @@
+
+var Channel = require('jschannel');
+
 function getUrlParameterByName(name) {
     name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
     var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
@@ -223,4 +226,4 @@ if (!isCrossDomain()) {
    };
 }
 
-window.platform = platform;
+module.exports = platform;
