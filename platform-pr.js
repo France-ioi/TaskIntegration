@@ -1,7 +1,3 @@
-(function () {
-
-'use strict';
-
 function getUrlParameterByName(name) {
     name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
     var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
@@ -228,5 +224,3 @@ if (!isCrossDomain()) {
 }
 
 window.platform = platform;
-
-}());
