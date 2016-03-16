@@ -1,0 +1,36 @@
+{
+  "name": "pem-task",
+  "version": "2.5.0",
+  "main": "platform-pr.js",
+  "author": "France-ioi (http://www.france-ioi.org)",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/France-ioi/pem-task.git"
+  },
+  "bugs": {
+    "url": "https://github.com/France-ioi/pem-task/issues"
+  },
+  "homepage": "https://github.com/France-ioi/pem-task#readme",
+  "dependencies": {},
+  "devDependencies": {
+    "jspm": "^0.16.31"
+  },
+  "jspm": {
+    "configFile": "jspm-0.16.config.js",
+    "dependencies": {
+      "jschannel": "npm:jschannel@^1.0.0",
+      "jquery": "npm:jquery@^2.2.1"
+    },
+    "format": "global",
+    "shim": {
+      "platform-pr": {
+        "format": "global",
+        "exports": "platform",
+        "dependencies": [
+          "jschannel"
+        ]
+      }
+    }
+  }
+}
