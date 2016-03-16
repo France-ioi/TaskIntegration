@@ -1,7 +1,7 @@
-(function() {
-'use strict';
+import $ from 'jquery';
+import platform from './platform-pr.js';
 
-/* 
+/*
  * Implementation of a small platform for standalone tasks, mostly for
  * development, demo and testing purposes.
  *
@@ -209,10 +209,10 @@ $(document).ready(function() {
             platformLoad(task);
          });
       };
-      if (window.platform.task || platform.initFailed) {
+      if (platform.task || platform.initFailed) {
          // case everything went fine with task loading, or task loading failed
          // (due to missing jschannel and file:// protocol...
-         getMetaDataAndLoad(window.task ? window.task : window.platform.task);
+         getMetaDataAndLoad(window.task ? window.task : platform.task);
       } else {
          // task is not loaded yet
          var oldInit = platform.initWithTask;
@@ -223,5 +223,3 @@ $(document).ready(function() {
       }
    }
 });
-
-})();
