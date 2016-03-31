@@ -1,3 +1,4 @@
+/* */
 
 var Channel = require('jschannel');
 
@@ -122,10 +123,13 @@ if (!isCrossDomain()) {
          return;
       }
       var gradeAnswer = function(params, success, error) {
+         var newSuccess = function(score, message, scoreToken) {
+            success([score, message, scoreToken]);
+         };
          if (typeof task.gradeAnswer === 'function') {
-            task.gradeAnswer(params[0], params[1], success, error);
+            task.gradeAnswer(params[0], params[1], newSuccess, error);
          } else {
-            window.grader.gradeTask(params[0], params[1], success, error);
+            window.grader.gradeTask(params[0], params[1], newSuccess, error);
          }
       };
       var channelId = getUrlParameterByName('channelId');
@@ -133,7 +137,7 @@ if (!isCrossDomain()) {
       platform.chan = chan;
       platform.task = task;
       platform.channelId = channelId;
-      chan.bind('task.load', function(trans, views) {task.load(views, callAndTrigger(trans.complete, 'load', trans.error, [views]), trans.error);trans.delayReturn(true);});
+      chan.bind('task.load', function(trans, views) {trans.delayReturn(true);task.load(views, callAndTrigger(trans.complete, 'load', trans.error, [views]), trans.error);});
       chan.bind('task.unload', function(trans) {task.unload(callAndTrigger(trans.complete, 'unload', trans.error, null), trans.error);trans.delayReturn(true);});
       chan.bind('task.getHeight', function(trans) {task.getHeight(trans.complete, trans.error);trans.delayReturn(true);});
       chan.bind('task.getMetaData', function(trans) {task.getMetaData(trans.complete, trans.error);trans.delayReturn(true);});
