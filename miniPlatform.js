@@ -1,3 +1,4 @@
+/* */ 
 var $ = require('jquery');
 var platform = require('./platform-pr.js');
 
@@ -148,7 +149,7 @@ $(document).ready(function() {
             }
          };
          platform.askHint = function(hintToken, success, error) {
-            $.post('updateTestToken.php', JSON.stringify({action: 'askHint'}), function(postRes){
+            $.post('updateTestToken.php', {action: 'askHint'}, function(postRes){
                if (success) {success();}
             }, 'json');
          };
