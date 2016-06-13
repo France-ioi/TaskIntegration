@@ -20,6 +20,20 @@ function inIframe () {
    }
 }
 
+function isCrossDomain() {
+   function isSameDomain() {
+      var res = false;
+      function doNothing(document){}
+      try{
+          res = !! parent.document;
+      } catch(e){
+          res = false;
+      }
+      return res;
+   }
+   return inIframe() && !isSameDomain();
+}
+
 var taskMetaData;
 
 // important for tracker.js
@@ -68,6 +82,7 @@ var miniPlatformPreviewGrade = function(answer) {
 var alreadyStayed = false;
 
 var miniPlatformValidate = function(mode, success, error) {
+   if (!error) error = console.error;
    $.post('updateTestToken.php', {action: 'showSolution'}, function(){}, 'json');
    if (mode == 'stay') {
       if (alreadyStayed) {
@@ -81,12 +96,12 @@ var miniPlatformValidate = function(mode, success, error) {
    if (mode == 'cancel') {
       alreadyStayed = false;
    } else {
-      $("#task").append("<center id='toremove'><br/><input type='button' value='Voir la solution' onclick='miniPlatformShowSolution()'></input></center>");
+      //$("#task").append("<center id='toremove'><br/><input type='button' value='Voir la solution' onclick='miniPlatformShowSolution()'></input></center>");
    }
    platform.trigger('validate', [mode]);
-   if (success) {
-      success();
-   }
+   task.getAnswer(function(answer) {
+      task.gradeAnswer(answer, '', success, error);
+   }, error);
 };
 
 function getUrlParameter(sParam)
@@ -105,8 +120,14 @@ function getUrlParameter(sParam)
 
 $(document).ready(function() {
    var hasPlatform = false;
+   var windowparent;
    try {
-       hasPlatform = (inIframe() && (typeof parent.TaskProxyManager !== 'undefined') && (typeof parent.generating == 'undefined' || parent.generating === true));
+      var inIframeRes= inIframe();
+      windowparent = window.parent;
+   } catch (e) {
+   }
+   try {
+       hasPlatform = (inIframeRes && (crossDomain || !windowparent || ((typeof windowparent.TaskProxyManager !== 'undefined') && (typeof windowparent.generating == 'undefined' || windowparent.generating === true))));
    } catch(ex) {
        // iframe from files:// url are considered cross-domain by Chrome
        if(location.protocol !== 'file:') {
