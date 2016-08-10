@@ -177,7 +177,7 @@ if (!isCrossDomain()) {
       platform.chan.call({method: "platform.validate",
          params: sMode,
          error: error,
-         success: callAndTrigger(success)
+         success: callAndTrigger(success, 'validate', error, [sMode])
       });
    };
    platform.getTaskParams = function(key, defaultValue, success, error) {
