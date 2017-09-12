@@ -138,6 +138,7 @@ $(document).ready(function() {
       var platformLoad = function(task) {
          platform.validate = miniPlatformValidate;
          platform.updateHeight = function(height,success,error) {if (success) {success();}};
+         platform.updateDisplay = function(data,success,error) {if (success) {success();}};
          var taskOptions = {};
          try {
             var strOptions = getUrlParameter("options");
@@ -205,6 +206,7 @@ $(document).ready(function() {
          task.load(loadedViews, function() {
             platform.trigger('load', [loadedViews]);
             task.getViews(function(views){
+               // TODO :: dynamic list of views
                if (! $("#choose-view").length)
                   $(document.body).prepend('<div id="choose-view"></div>');
                $("#choose-view").html("");
