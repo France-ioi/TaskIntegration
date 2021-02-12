@@ -139,6 +139,7 @@ $(document).ready(function() {
          platform.validate = miniPlatformValidate;
          platform.updateHeight = function(height,success,error) {if (success) {success();}};
          platform.updateDisplay = function(data,success,error) {if (success) {success();}};
+         platform.log = function(data,success,error) {if (success) {success();}};
          var taskOptions = {};
          try {
             var strOptions = getUrlParameter("options");
